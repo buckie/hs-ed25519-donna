@@ -1,6 +1,8 @@
+{-# LANGUAGE DeriveGeneric #-}
+
 module Crypto.Ed25519.Pure (
-             PrivateKey
-           , PublicKey
+             PrivateKey(..)
+           , PublicKey(..)
            , Signature(..)
            , generatePrivate
            , generatePublic
@@ -20,17 +22,18 @@ import Foreign.C.Types
 import Foreign.Ptr
 import Foreign.Marshal.Alloc (allocaBytes)
 import System.IO.Unsafe (unsafePerformIO)
+import GHC.Generics
 
 -- |The type of a Ed25519 private key.
-newtype PrivateKey = Priv ByteString
-            deriving (Show)
+newtype PrivateKey = Priv {unPriv :: ByteString}
+  deriving (Show, Read, Eq, Ord, Generic)
 
 -- |The type of a Ed25519 public key.
-newtype PublicKey  = Pub ByteString
-            deriving (Show)
+newtype PublicKey  = Pub {unPub :: ByteString}
+  deriving (Show, Read, Eq, Ord, Generic)
 
-newtype Signature  = Sig ByteString
-            deriving (Show)
+newtype Signature  = Sig {unSig :: ByteString}
+  deriving (Show, Read, Eq, Ord, Generic)
 
 -- Randomly generate an Ed25519 private key
 generatePrivate :: CryptoRandomGen g => g -> Either GenError (PrivateKey, g)
